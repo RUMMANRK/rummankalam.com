@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ThreeBox from '../components/ThreeBox.astro';
+import RegMark from '../components/RegMark.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Rumman Kalam — creative director, editor, author. Bridging legacy and new media in South Asia."
+>
+  <div class="about-wrap container">
+    <header class="about-header section">
+      <RegMark class="reg-tr" />
+      <div class="sec-kick"><div class="sec-kick-label">About</div></div>
+      <h1 class="about-title text-heading">
+        Seventeen years building media from the inside.
+      </h1>
+      <div class="about-standfirst">
+        <p>Editor. Media operator. Creative consultant.</p>
+        <p>Working across newsrooms, startups, and projects of my own.</p>
+        <p>Based in Dhaka — writing and building for South Asia.</p>
+      </div>
+      <div class="about-meta" aria-hidden="true">
+        <span class="meta-rule"></span>
+        <span class="meta-label">File · About</span>
+        <span class="meta-dot">·</span>
+        <span class="meta-label">Dhaka</span>
+        <span class="meta-dot">·</span>
+        <span class="meta-label">Since 2009</span>
+      </div>
+    </header>
+
+    <div class="threebox-wrap section">
+      <ThreeBox />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-wrap { padding-bottom: var(--space-16); }
+
+  .about-header {
+    position: relative;
+    padding: 64px 0 48px;
+    max-width: 720px;
+  }
+
+  .reg-tr {
+    top: 12px;
+    right: 0;
+  }
+
+  .about-title {
+    max-width: 600px;
+    margin-bottom: 28px;
+  }
+
+  .about-standfirst {
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .about-standfirst p {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    margin: 0;
+    letter-spacing: -0.005em;
+    transition: color 0.6s ease;
+  }
+
+  .about-standfirst p:first-child {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .about-meta {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .meta-rule {
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--red);
+    opacity: 0.6;
+    margin-right: 4px;
+  }
+
+  .meta-dot { color: var(--red); }
+
+  .threebox-wrap {
+    padding: 40px 0 0;
+  }
+
+  :global(body.dark) .about-standfirst p {
+    font-family: var(--font-mono);
+    font-size: 15px;
+  }
+
+  @media (max-width: 900px) {
+    .about-header { padding: 40px 0 32px; text-align: center; }
+    .about-title { margin: 0 auto 20px; }
+    .about-standfirst { margin: 0 auto; }
+    .about-meta { justify-content: center; flex-wrap: wrap; }
+    .reg-tr { display: none; }
+  }
+</style>

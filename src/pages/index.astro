@@ -1,0 +1,294 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Typewriter from '../components/Typewriter.astro';
+import Portrait from '../components/Portrait.astro';
+import Timeline from '../components/Timeline.astro';
+import RegMark from '../components/RegMark.astro';
+import achievements from '../content/data/achievements.json';
+import timelineNodes from '../content/data/timeline-nodes.json';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Rumman Kalam',
+  alternateName: 'Rumman R. Kalam',
+  jobTitle: 'Creative Director, Editor, Author',
+  description: 'Rumman Kalam — creative director, editor, author. Bridging legacy and new media in South Asia.',
+  url: 'https://rummankalam.com',
+  image: 'https://rummankalam.com/rumman-kalam-cutout.png',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'General enquiries',
+    url: 'https://rummankalam.com/contact',
+  },
+  address: { '@type': 'PostalAddress', addressLocality: 'Dhaka', addressCountry: 'BD' },
+  areaServed: ['Bangladesh', 'South Asia'],
+  knowsAbout: [
+    'Digital media strategy',
+    'Newsroom transformation',
+    'Content strategy',
+    'Creative direction',
+    'Audience development',
+    'Media operations',
+    'Editorial leadership',
+    'Publishing',
+  ],
+  hasOccupation: [
+    { '@type': 'Occupation', name: 'Creative Director' },
+    { '@type': 'Occupation', name: 'Editor' },
+    { '@type': 'Occupation', name: 'Author' },
+  ],
+  sameAs: [
+    'https://www.linkedin.com/in/rummankalam',
+    'https://www.goodreads.com/author/show/19989689.Rumman_R_Kalam',
+  ],
+};
+---
+
+<BaseLayout
+  title="Rumman Kalam — Media. Technology. Culture."
+  description="Rumman Kalam — creative director, editor, author. Bridging legacy and new media in South Asia."
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="hero container">
+    <RegMark class="reg-tr" />
+
+    <div class="hero-left">
+      <Typewriter />
+    </div>
+
+    <div class="hero-right">
+      <Portrait />
+    </div>
+  </section>
+
+  <!-- What I do -->
+  <section class="section wid-section container">
+    <RegMark class="reg-bl" />
+    <div class="sec-kick"><div class="sec-kick-label">What I do</div></div>
+
+    <div class="wid-grid">
+      <div class="wid-timeline">
+        <Timeline vertical={true} />
+      </div>
+
+      <div class="wid-right">
+        <div class="wid-copy">
+          <p id="wid-lead" class="lead-line text-heading">
+            I've been running media operations since I was <em>fourteen</em>.
+          </p>
+          <p id="wid-body" class="body-p text-body">
+            Editor, operator, consultant — three shapes of the same practice.
+            I've built meme communities, youth supplements, satirical weeklies, and digital
+            subscription products. I write. I ship. I hire. I read.
+          </p>
+        </div>
+
+        <div class="wid-timeline-mobile">
+          <Timeline vertical={false} />
+        </div>
+
+        <div class="wid-achievements">
+          <ul id="wid-achievements" class="achievements">
+            {achievements.items.map(item => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script define:vars={{ timelineNodes }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const leadEl = document.getElementById('wid-lead');
+    const bodyEl = document.getElementById('wid-body');
+    const achievementsEl = document.getElementById('wid-achievements');
+    const copyEl = document.querySelector('.wid-copy');
+    const achievementsWrap = document.querySelector('.wid-achievements');
+
+    let activeNode = null;
+
+    function setContent(content) {
+      const targets = [copyEl, achievementsWrap];
+      targets.forEach(el => { el.style.transition = 'opacity 0.15s ease'; el.style.opacity = '0'; });
+      setTimeout(() => {
+        leadEl.innerHTML = content.lead;
+        bodyEl.textContent = content.body;
+        achievementsEl.innerHTML = content.items.map(item => `<li>${item}</li>`).join('');
+        targets.forEach(el => { el.style.opacity = '1'; });
+      }, 150);
+    }
+
+    function syncTimelines(activeKey) {
+      document.querySelectorAll('.timeline-svg').forEach(svg => {
+        svg.classList.toggle('has-active', !!activeKey);
+      });
+      document.querySelectorAll('[data-node]').forEach(g => {
+        if (activeKey) {
+          g.setAttribute('data-active', g.dataset.node === activeKey ? 'true' : 'false');
+        } else {
+          g.removeAttribute('data-active');
+        }
+      });
+    }
+
+    document.querySelectorAll('[data-node]').forEach(g => {
+      g.addEventListener('click', () => {
+        const key = g.dataset.node;
+        if (activeNode === key) {
+          activeNode = null;
+          setContent(timelineNodes.default);
+          syncTimelines(null);
+        } else {
+          activeNode = key;
+          setContent(timelineNodes[key] || timelineNodes.default);
+          syncTimelines(key);
+        }
+      });
+
+      g.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          g.click();
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  /* ── Hero ────────────────────────────────────────────── */
+  .hero {
+    padding: 72px 48px 48px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .hero-left { max-width: 640px; justify-self: start; }
+  .hero-right { justify-self: end; }
+
+  .hero-kicker {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    color: var(--muted);
+  }
+
+  .kicker-rule {
+    width: 28px;
+    height: 1px;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+
+  .reg-tr { top: 72px; right: 14px; }
+  .reg-bl { bottom: 36px; left: 14px; }
+
+  /* Dark mode hero corners */
+  :global(body.dark) .hero::before,
+  :global(body.dark) .hero::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--red);
+  }
+  :global(body.dark) .hero::before { top: 24px; left: 32px; border-right: none; border-bottom: none; }
+  :global(body.dark) .hero::after  { top: 24px; right: 32px; border-left: none; border-bottom: none; }
+
+  /* ── What I do ───────────────────────────────────────── */
+  .section { padding: 32px 48px 64px; }
+
+  .wid-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0 56px;
+    align-items: start;
+  }
+
+  .wid-timeline { padding-top: 8px; }
+  .wid-timeline svg { overflow: visible; }
+  .wid-right { display: flex; flex-direction: column; gap: 36px; }
+
+  .lead-line { margin-bottom: 12px; max-width: 680px; }
+  .body-p { max-width: 620px; margin: 14px 0 0; }
+
+  .wid-timeline-mobile { display: none; }
+
+  .achievements {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 48px;
+    row-gap: 14px;
+    width: 100%;
+  }
+
+  :global(.achievements li) {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
+    transition: color 0.6s ease;
+    text-align: left;
+  }
+
+  :global(.achievements li::before) {
+    content: '—';
+    color: var(--red);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  :global(body.dark) .achievements li { font-family: var(--font-mono); }
+
+  /* ── Responsive ──────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 40px 20px 48px;
+      gap: 40px;
+      text-align: center;
+    }
+
+    .hero-left { max-width: 100%; justify-self: stretch; }
+    .hero-right { justify-self: center; }
+    .hero-kicker { justify-content: center; }
+
+    .section { padding: 48px 20px; text-align: center; }
+
+    .wid-grid { grid-template-columns: 1fr; gap: 36px; }
+    .wid-timeline { display: none; }
+    .wid-timeline-mobile { display: block; }
+
+    .lead-line { text-align: center; margin: 0 auto 12px; }
+    .body-p { text-align: center; margin: 14px auto 0; max-width: 100%; }
+
+    .wid-achievements { display: flex; justify-content: center; }
+
+    .achievements {
+      grid-template-columns: 1fr;
+      width: fit-content;
+      margin: 0 auto;
+    }
+    .achievements li { text-align: left; }
+
+    .reg-tr, .reg-bl { display: none; }
+
+    :global(body.dark) .hero::before,
+    :global(body.dark) .hero::after { display: none; }
+  }
+</style>

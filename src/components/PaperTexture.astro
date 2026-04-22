@@ -1,0 +1,23 @@
+---
+---
+
+<div class="paper-texture" aria-hidden="true"></div>
+
+<style>
+  .paper-texture {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0.09;
+    mix-blend-mode: multiply;
+    /* Asymmetric turbulence: low X freq + high Y freq produces horizontal fibres
+       reminiscent of long-grain paper. Warm tan color matrix keeps it "paper"
+       rather than "noise". */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='520' height='520'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.018 0.58' numOctaves='2' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.42  0 0 0 0 0.34  0 0 0 0 0.22  0 0 0 0.75 0'/></filter><rect width='100%25' height='100%25' filter='url(%23p)'/></svg>");
+    transition: opacity 0.6s ease;
+  }
+
+  /* Dark mode: no paper texture */
+  :global(body.dark) .paper-texture { opacity: 0; }
+</style>

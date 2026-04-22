@@ -1,0 +1,188 @@
+---
+import ModeToggle from './ModeToggle.astro';
+import navigation from '../content/data/navigation.json';
+
+const navLinks = navigation.nav.filter(link => link.visible !== false);
+
+const current = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? current === '/' : current.startsWith(href);
+---
+
+<div class="masthead-wrap" id="mastheadWrap">
+  <header class="masthead">
+    <a href="/" class="wordmark text-wordmark">
+      <span class="wordmark-prompt" aria-hidden="true">&gt;</span>Rumman Kalam
+    </a>
+    <nav aria-label="Primary navigation">
+      {navLinks.map(({ href, label }) => (
+        <a
+          href={href}
+          class:list={['text-nav', { active: isActive(href) }]}
+          aria-current={isActive(href) ? 'page' : undefined}
+        >
+          {label}
+        </a>
+      ))}
+      <ModeToggle />
+    </nav>
+  </header>
+</div>
+<div class="masthead-spacer" aria-hidden="true"></div>
+
+<style>
+  .masthead-wrap {
+    background: var(--paper);
+    border-bottom: 2px solid var(--ink);
+    transition: border-color 0.6s ease, background 0.6s ease, transform 0.28s ease;
+  }
+
+  .masthead {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 22px 48px 20px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .wordmark-prompt {
+    display: none;
+    color: var(--red);
+  }
+
+  nav {
+    display: flex;
+    gap: 26px;
+    align-items: center;
+  }
+
+  .text-nav {
+    position: relative;
+    padding-bottom: 3px;
+  }
+
+  .text-nav:hover,
+  .text-nav.active {
+    color: var(--red);
+  }
+
+  .text-nav.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--red);
+  }
+
+  :global(body.dark) .wordmark-prompt {
+    display: inline;
+  }
+
+  .masthead-spacer { display: none; }
+
+  /* Desktop: sticky, auto-hide on scroll */
+  @media (min-width: 901px) {
+    .masthead-wrap {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      will-change: transform;
+    }
+    .masthead-wrap.hidden {
+      transform: translateY(-100%);
+    }
+    .masthead-spacer { display: block; height: 76px; }
+    /* Tiny hotspot strip to catch cursor at top even when hidden */
+    :global(body)::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 16px;
+      z-index: 49;
+      pointer-events: auto;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .masthead {
+      padding: 16px 20px;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+    }
+
+    nav {
+      gap: 14px;
+      font-size: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .masthead-wrap { transition: border-color 0.6s ease, background 0.6s ease; }
+  }
+</style>
+
+<script>
+  (function setupMasthead() {
+    const wrap = document.getElementById('mastheadWrap');
+    if (!wrap) return;
+
+    const mq = window.matchMedia('(min-width: 901px)');
+    let lastY = window.scrollY;
+    let hovering = false;
+    let hideTimer: number | undefined;
+
+    function apply() {
+      if (!mq.matches) {
+        wrap.classList.remove('hidden');
+        return;
+      }
+      const y = window.scrollY;
+      const scrollingUp = y < lastY;
+      const nearTop = y < 120;
+      const shouldShow = nearTop || scrollingUp || hovering;
+      wrap.classList.toggle('hidden', !shouldShow);
+      lastY = y;
+    }
+
+    window.addEventListener('scroll', apply, { passive: true });
+    mq.addEventListener('change', apply);
+
+    window.addEventListener('mousemove', (e) => {
+      if (!mq.matches) return;
+      if (e.clientY < 80) {
+        if (!hovering) {
+          hovering = true;
+          window.clearTimeout(hideTimer);
+          apply();
+        }
+      } else if (e.clientY > 140 && hovering) {
+        window.clearTimeout(hideTimer);
+        hideTimer = window.setTimeout(() => {
+          hovering = false;
+          apply();
+        }, 350);
+      }
+    });
+
+    // Initial state
+    apply();
+  })();
+</script>

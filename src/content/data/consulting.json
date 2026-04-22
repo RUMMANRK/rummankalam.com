@@ -1,0 +1,39 @@
+{
+  "tagline": "Media strategy and digital transformation for publishers and content operations that want to build something that lasts.",
+  "serviceAreas": [
+    {
+      "title": "Editorial strategy",
+      "description": "Audience-first editorial planning. Section design, content calendars, tone of voice, and the editorial decisions that compound over time. Workflow planning and subsequent HR strategy."
+    },
+    {
+      "title": "Digital product development",
+      "description": "From concept to launch. Subscription architecture, paywall strategy, newsletter design, and the product decisions that determine whether readers stay."
+    },
+    {
+      "title": "Team and process",
+      "description": "Building editorial teams that can produce at speed without losing quality. Hiring frameworks, workflow design, and managing the transition from print to digital-first."
+    },
+    {
+      "title": "Content marketing launches",
+      "description": "Starting something new. Audience research, brand positioning, platform strategy, and the first ninety days that determine whether the content outfit finds its readers."
+    }
+  ],
+  "engagements": [
+    {
+      "description": "Advised a regional news organisation on digital subscription strategy. Worked with the editorial and product teams over six months to design a reader revenue model suited to the local market."
+    },
+    {
+      "description": "Conducted an editorial audit for a legacy publication. Produced a strategic brief covering audience segmentation, content priorities, and digital infrastructure."
+    }
+  ],
+  "testimonials": [
+    {
+      "quote": "I heard good things about Rumman in the last few years. Finally, I got to work with him in the same department when he joined the digital transformation desk. And the people who praised his work, were absolutely right. Rumman is always in a very energetic and enterprising mood. We worked on a number of great projects, like the messenger bot, but we discussed ideas about even more projects. This 'never give up' attitude of Rumman is going to take him a long way. I wish I worked with him for a longer period, because he is an asset to any company he's working at.",
+      "attribution": "Tajdin Hassan, Chief Business Officer, The Daily Star"
+    },
+    {
+      "quote": "Rumman and I have worked on Rantages for 6 years. Upon seeing him introduce something completely new to the Bangladeshi market, I joined on board as a partner on 2011, handling the back-end of things of the Rantages server operations. Through the last 6 years, I've seen Rumman as a driven individual tackling the monumental task of running Rantages with zero funds but still steer it towards becoming the premier content portal of Bangladesh that has survived through almost everything. Given the resources he requires for the job, Rumman will get the show on the road. An individual who thrives in a lot of creative freedom, I've also found that he can be objective oriented, breaking down larger goals into smaller tasks that can be easily achieved.",
+      "attribution": "Connor Fanning, Senior EUC Platforms Engineer"
+    }
+  ]
+}

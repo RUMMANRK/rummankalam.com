@@ -1,0 +1,50 @@
+{
+  "displayName": "Rumman Kalam",
+  "tagline": "Editor · Media Operator · Creative Consultant",
+  "location": "Dhaka, Bangladesh",
+  "avatar": "",
+  "links": [
+    {
+      "label": "Portfolio",
+      "href": "https://rummankalam.com/portfolio",
+      "description": "Selected work — products, publications, strategy.",
+      "visible": true
+    },
+    {
+      "label": "About",
+      "href": "https://rummankalam.com/about",
+      "description": "Writer, editor, creative director.",
+      "visible": true
+    },
+    {
+      "label": "Consulting",
+      "href": "https://rummankalam.com/consulting",
+      "description": "Media, editorial, and product consulting.",
+      "visible": true
+    },
+    {
+      "label": "Rantages",
+      "href": "https://rantages.com",
+      "description": "Bangladesh's original meme community.",
+      "visible": true
+    },
+    {
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/rummankalam",
+      "description": "",
+      "visible": true
+    },
+    {
+      "label": "Goodreads",
+      "href": "https://www.goodreads.com/author/show/19989689.Rumman_R_Kalam",
+      "description": "",
+      "visible": true
+    },
+    {
+      "label": "Get in touch",
+      "href": "/contact",
+      "description": "",
+      "visible": true
+    }
+  ]
+}

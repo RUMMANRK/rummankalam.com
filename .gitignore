@@ -1,0 +1,14 @@
+dist/
+.astro/
+node_modules/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+.wrangler/
+
+# Local drafts / scratch — not for the public repo
+rumman_kalam_portfolio.md
+reading_newspaper.svg
+terminal.svg

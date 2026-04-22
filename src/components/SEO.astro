@@ -1,0 +1,65 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical = Astro.url.href,
+  ogImage = '/og-image.jpg',
+  ogType = 'website',
+  jsonLd,
+  noindex = false,
+} = Astro.props;
+
+const siteTitle = title.includes('Rumman Kalam')
+  ? title
+  : `${title} — Rumman Kalam`;
+
+const ogImageUrl = new URL(ogImage, Astro.site).href;
+---
+
+<title>{siteTitle}</title>
+<meta name="description" content={description} />
+<meta name="author" content="Rumman Kalam" />
+<meta name="keywords" content="Rumman Kalam, media consultant, creative director, editor Bangladesh, digital media South Asia, UNB, The Daily Star, Rantages, media strategy, content strategy, newsroom transformation, Dhaka editor, creative consultant" />
+<link rel="canonical" href={canonical} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={siteTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={siteTitle} />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content="Rumman Kalam" />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={siteTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+<meta name="twitter:image:alt" content={siteTitle} />
+<meta name="twitter:creator" content="@rummankalam" />
+<meta name="twitter:site" content="@rummankalam" />
+
+<!-- Indexing hints for LLMs and search -->
+{noindex ? (
+  <meta name="robots" content="noindex, nofollow" />
+) : (
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+)}
+
+{jsonLd && (
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+)}

@@ -1,0 +1,104 @@
+---
+interface Props {
+  name: string;
+  role: string;
+  projectType: string;
+  year: number;
+  slug: string;
+  heroImage?: string;
+}
+
+const { name, role, projectType, year, slug, heroImage } = Astro.props;
+---
+
+<article class="case-card">
+  <a href={`/portfolio/${slug}`} class="case-link">
+    <div class:list={["case-image", { 'has-image': !!heroImage }]} aria-hidden="true">
+      {heroImage ? (
+        <img src={heroImage} alt="" loading="lazy" decoding="async" />
+      ) : (
+        <span class="case-image-text">{name}</span>
+      )}
+    </div>
+    <div class="case-meta text-label">
+      <span class="case-type">{projectType}</span>
+      <span>{year}</span>
+    </div>
+    <h3 class="case-name">{name}</h3>
+    <p class="case-role">{role}</p>
+  </a>
+</article>
+
+<style>
+  .case-card {
+    transition: transform 0.25s ease;
+  }
+
+  .case-card:hover { transform: translateY(-3px); }
+  .case-card:hover .case-name { color: var(--red); }
+
+  .case-link { display: block; }
+
+  .case-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--paper-warm);
+    border: 0.5px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    filter: grayscale(1) contrast(1.3);
+    transition: border-color 0.6s ease, filter 0.3s ease;
+    overflow: hidden;
+  }
+
+  .case-image.has-image { padding: 12%; }
+
+  .case-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .case-card:hover .case-image { filter: grayscale(0.3) contrast(1.1); }
+
+  .case-image-text {
+    font-family: var(--font-serif);
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    opacity: 0.5;
+  }
+
+  .case-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .case-type { color: var(--red); }
+
+  .case-name {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--ink);
+    margin: 0 0 6px;
+    letter-spacing: -0.015em;
+    transition: color 0.2s ease;
+  }
+
+  .case-role {
+    font-size: 13px;
+    color: var(--muted);
+    transition: color 0.6s ease;
+  }
+
+  :global(body.dark) .case-name,
+  :global(body.dark) .case-role { font-family: var(--font-mono); }
+  :global(body.dark) .case-name { font-size: 18px; }
+</style>

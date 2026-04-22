@@ -1,0 +1,121 @@
+---
+---
+
+<button
+  class="mode-toggle"
+  id="modeToggle"
+  aria-label="Switch to terminal mode"
+  aria-pressed="false"
+>
+  <span class="icon icon-paper" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.5" y="4.5" width="17" height="15" rx="0.5"/>
+      <line x1="6.5" y1="8" x2="17.5" y2="8"/>
+      <line x1="6.5" y1="11" x2="13" y2="11"/>
+      <line x1="6.5" y1="13.5" x2="17.5" y2="13.5"/>
+      <line x1="6.5" y1="16" x2="17.5" y2="16"/>
+    </svg>
+  </span>
+  <span class="icon icon-terminal" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4.5" width="18" height="15" rx="1.5"/>
+      <polyline points="7,10 10,12 7,14"/>
+      <line x1="12" y1="14.5" x2="17" y2="14.5"/>
+    </svg>
+  </span>
+</button>
+
+<style>
+  .mode-toggle {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+    margin-left: 12px;
+    padding: 0;
+    color: var(--ink);
+    transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Light mode: show paper icon, hide terminal */
+  .icon-paper { opacity: 1; transform: rotate(0) scale(1); }
+  .icon-terminal { opacity: 0; transform: rotate(-180deg) scale(0.3); }
+
+  /* Dark mode: swap */
+  :global(body.dark) .mode-toggle .icon-paper {
+    opacity: 0;
+    transform: rotate(180deg) scale(0.3);
+  }
+  :global(body.dark) .mode-toggle .icon-terminal {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+
+  /* Hover: gentle wobble + invert */
+  .mode-toggle:hover {
+    background: var(--ink);
+    color: var(--paper);
+    transform: rotate(-8deg) scale(1.06);
+  }
+
+  :global(body.dark) .mode-toggle {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  :global(body.dark) .mode-toggle:hover {
+    background: var(--red);
+    color: #000;
+    transform: rotate(8deg) scale(1.06);
+  }
+
+  /* A tiny pop animation on every click, via a helper class */
+  .mode-toggle.pop { animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  @keyframes pop {
+    0%   { transform: scale(1) rotate(0); }
+    40%  { transform: scale(1.22) rotate(-14deg); }
+    70%  { transform: scale(0.94) rotate(6deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .icon, .mode-toggle, .mode-toggle:hover { transition: opacity 0.1s linear; transform: none !important; animation: none !important; }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('modeToggle') as HTMLButtonElement | null;
+  if (btn) {
+    const isDark = () => document.body.classList.contains('dark');
+
+    const update = () => {
+      const dark = isDark();
+      btn.setAttribute('aria-pressed', String(dark));
+      btn.setAttribute('aria-label', dark ? 'Switch to reading mode' : 'Switch to terminal mode');
+    };
+
+    btn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      try { localStorage.setItem('theme', isDark() ? 'dark' : 'light'); } catch {}
+      update();
+      btn.classList.remove('pop');
+      void btn.offsetWidth; // restart animation
+      btn.classList.add('pop');
+    });
+
+    update();
+  }
+</script>

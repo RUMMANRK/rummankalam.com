@@ -1,0 +1,95 @@
+/* ── Container ───────────────────────────────────────────── */
+.container {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: var(--space-12);
+}
+
+/* ── Stack (vertical flex) ───────────────────────────────── */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-6));
+}
+
+/* ── Cluster (horizontal flex, wrapping) ─────────────────── */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-gap, var(--space-4));
+  align-items: center;
+}
+
+/* ── Grid (CSS grid with custom props) ───────────────────── */
+.grid {
+  display: grid;
+  gap: var(--grid-gap, var(--space-6));
+  grid-template-columns: repeat(var(--grid-cols, 1), 1fr);
+}
+
+/* ── Section wrapper ─────────────────────────────────────── */
+.section {
+  position: relative;
+  border-top: 0.5px solid var(--rule);
+  transition: var(--t-border);
+}
+
+/* Dark mode corner brackets on sections */
+body.dark .section::before,
+body.dark .section::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--red);
+}
+body.dark .section::before {
+  top: 24px;
+  left: 32px;
+  border-right: none;
+  border-bottom: none;
+}
+body.dark .section::after {
+  top: 24px;
+  right: 32px;
+  border-left: none;
+  border-bottom: none;
+}
+
+/* ── Section kick (label + red rule) ─────────────────────── */
+.sec-kick {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-9, 36px);
+}
+.sec-kick::before {
+  content: '';
+  width: 32px;
+  height: 2px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+.sec-kick-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: var(--t-color);
+}
+body.dark .sec-kick-label { font-family: var(--font-mono); }
+body.dark .sec-kick-label::before { content: '> '; color: var(--red); }
+body.dark .sec-kick-label::after {
+  content: '/';
+  color: var(--red);
+  margin-left: var(--space-1);
+  animation: blink 1s step-end infinite;
+}
+
+@media (max-width: 900px) {
+  .container { padding-inline: var(--space-5); }
+  .sec-kick { justify-content: center; }
+  body.dark .section::before,
+  body.dark .section::after { display: none; }
+}

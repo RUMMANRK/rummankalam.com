@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../../public/rumman-kalam-portrait-cutout.png';
+
+interface Props {
+  size?: 'md' | 'lg';
+  caption?: string;
+}
+
+const { size = 'lg', caption } = Astro.props as Props;
+const widthMap = { md: 220, lg: 400 };
+const heightMap = { md: 275, lg: 500 };
+const w = widthMap[size];
+const h = heightMap[size];
+---
+
+<div class={`portrait-holder portrait-${size}`}>
+  <Image
+    src={portrait}
+    alt="Rumman Kalam"
+    class="portrait-img"
+    width={w}
+    height={h}
+    format="webp"
+    quality={85}
+    draggable="false"
+  />
+  <div class="tape tape-tl" aria-hidden="true"></div>
+  <div class="tape tape-br" aria-hidden="true"></div>
+  <span class="bracket bracket-tl" aria-hidden="true"></span>
+  <span class="bracket bracket-tr" aria-hidden="true"></span>
+  <span class="bracket bracket-bl" aria-hidden="true"></span>
+  <span class="bracket bracket-br" aria-hidden="true"></span>
+</div>
+{caption !== '' && (
+  <div class="portrait-caption" set:html={caption ?? 'Dhaka <span class="u-red">·</span> Filed 2026'}></div>
+)}
+
+<style>
+  .portrait-holder {
+    position: relative;
+    transform: rotate(-2deg);
+    transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+    margin-top: 4px;
+  }
+  .portrait-lg { width: 400px; }
+  .portrait-md { width: 220px; }
+
+  .portrait-holder:hover {
+    transform: rotate(-0.5deg) translateY(-4px);
+  }
+
+  .portrait-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tape {
+    position: absolute;
+    width: 68px;
+    height: 22px;
+    background: var(--red-soft);
+    border-top: 0.5px solid rgba(214, 40, 40, 0.4);
+    border-bottom: 0.5px solid rgba(214, 40, 40, 0.4);
+    z-index: 3;
+  }
+
+  .tape-tl { top: 10px; left: 10px; transform: rotate(-14deg); }
+  .tape-br { bottom: 10px; right: 10px; transform: rotate(9deg); }
+
+  .portrait-caption {
+    margin-top: 14px;
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    transition: color 0.6s ease;
+  }
+
+  :global(body.dark) .tape { display: none; }
+  :global(body.dark) .portrait-holder { transform: rotate(0); }
+  :global(body.dark) .portrait-holder:hover { transform: translateY(-3px); }
+  :global(body.dark) .portrait-img {
+    filter: sepia(1) saturate(3.2) hue-rotate(-28deg) contrast(1.05) brightness(0.95);
+  }
+  :global(body.dark) .portrait-caption { font-family: var(--font-mono); }
+
+  /* Red corner brackets — only in dark mode, replacing the washi-tape motif */
+  .bracket {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--red);
+    z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bracket-tl { top: -8px;    left: -8px;    border-right: none;  border-bottom: none; }
+  .bracket-tr { top: -8px;    right: -8px;   border-left: none;   border-bottom: none; }
+  .bracket-bl { bottom: -8px; left: -8px;    border-right: none;  border-top: none;    }
+  .bracket-br { bottom: -8px; right: -8px;   border-left: none;   border-top: none;    }
+
+  :global(body.dark) .bracket { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portrait-holder,
+    .portrait-holder:hover { transition: none; transform: none; }
+  }
+
+  @media (max-width: 900px) {
+    .portrait-holder { width: 280px; max-width: 100%; margin: 0 auto; }
+  }
+</style>

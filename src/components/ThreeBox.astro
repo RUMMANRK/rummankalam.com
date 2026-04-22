@@ -1,0 +1,329 @@
+---
+import aboutData from '../content/data/about.json';
+
+const tabs = [
+  {
+    key: 'writer',
+    number: '01',
+    label: 'Writer',
+    data: aboutData.writer,
+    annotations: ['Since 2009', 'Rantages', 'Essays · Satire · Fiction', 'Disconnect · 2016'],
+  },
+  {
+    key: 'editor',
+    number: '02',
+    label: 'Editor',
+    data: aboutData.editor,
+    annotations: ['Since 2013', 'SHOUT · The Daily Star', 'UNB — Head of Digital'],
+  },
+  {
+    key: 'creative_director',
+    number: '03',
+    label: 'Creative Director',
+    data: aboutData.creative_director,
+    annotations: ['Product + editorial', 'Digital transformation', 'Brand · audience'],
+  },
+];
+---
+
+<section class="file-index" id="fileIndex" aria-label="Roles">
+  <div class="index-row" role="tablist">
+    {tabs.map((t, i) => (
+      <button
+        class:list={['index-tab', { active: i === 0 }]}
+        role="tab"
+        aria-selected={i === 0 ? 'true' : 'false'}
+        aria-controls="fileDeck"
+        data-key={t.key}
+      >
+        <span class="tab-number">{t.number}</span>
+        <span class="tab-label text-label">{t.label}</span>
+        <span class="tab-summary">{t.data.summary}</span>
+        <span class="tab-hint" aria-hidden="true">
+          <span class="tab-hint-text">Open file</span>
+          <span class="tab-hint-arrow">→</span>
+        </span>
+      </button>
+    ))}
+  </div>
+
+  <div class="file-deck" id="fileDeck">
+    {tabs.map((t, i) => (
+      <article
+        class:list={['file-card', { active: i === 0 }]}
+        data-key={t.key}
+        role="tabpanel"
+        aria-hidden={i === 0 ? 'false' : 'true'}
+        hidden={i !== 0}
+      >
+        <header class="file-header">
+          <span class="file-tag">File · {t.number}</span>
+          <h3 class="file-title text-heading">{t.label}</h3>
+        </header>
+        <div class="file-body-grid">
+          <div class="file-body-text">
+            <p>{t.data.body}</p>
+          </div>
+          <aside class="file-annotations" aria-label="File annotations">
+            <div class="annotation-rule" aria-hidden="true"></div>
+            {t.annotations.map(a => (
+              <div class="annotation">{a}</div>
+            ))}
+          </aside>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .file-index {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .index-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 0.5px solid var(--rule);
+    border-bottom: 0.5px solid var(--rule);
+    transition: border-color 0.6s ease;
+  }
+
+  .index-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 22px 22px 20px;
+    text-align: left;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-right: 0.5px solid var(--rule);
+    color: inherit;
+    position: relative;
+    transition: background 0.3s ease, opacity 0.3s ease, border-color 0.6s ease;
+  }
+
+  .index-tab:last-child { border-right: none; }
+
+  .index-tab::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+
+  .index-tab.active::before { transform: scaleX(1); }
+  .index-tab.active { background: rgba(214, 40, 40, 0.03); }
+
+  .index-tab:not(.active) { opacity: 0.68; }
+  .index-tab:not(.active):hover { opacity: 1; background: rgba(214, 40, 40, 0.02); }
+
+  .tab-number {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    line-height: 1;
+    color: var(--red);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .index-tab:hover .tab-number,
+  .index-tab.active .tab-number {
+    transform: translateY(-2px);
+  }
+
+  .tab-label {
+    display: block;
+    color: var(--ink);
+    transition: color 0.2s ease;
+  }
+
+  .index-tab:hover .tab-label { color: var(--red); }
+
+  .tab-summary {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-top: 2px;
+  }
+
+  .tab-hint {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    color: var(--red);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+
+  .index-tab.active .tab-hint { opacity: 0; }
+  .tab-hint-arrow { transition: transform 0.25s ease; }
+  .index-tab:hover .tab-hint-arrow { transform: translateX(4px); }
+
+  .file-deck { position: relative; }
+
+  .file-card {
+    padding: 28px 28px 32px;
+    border: 0.5px solid var(--rule);
+    background: var(--paper-soft, rgba(214, 40, 40, 0.015));
+    transition: border-color 0.6s ease;
+    animation: file-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+
+  @keyframes file-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .file-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 0.5px solid var(--rule);
+  }
+
+  .file-tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+
+  .file-title {
+    font-size: 26px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .file-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    gap: 36px;
+  }
+
+  .file-body-text p {
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin: 0;
+    transition: color 0.6s ease;
+    max-width: 62ch;
+  }
+
+  .file-annotations {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .annotation-rule {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    bottom: 2px;
+    width: 1px;
+    background: var(--red);
+    opacity: 0.5;
+  }
+
+  .annotation {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    line-height: 1.4;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.6s ease;
+  }
+
+  :global(body.dark) .tab-summary { font-family: var(--font-mono); font-size: 14px; }
+  :global(body.dark) .file-body-text p { font-family: var(--font-mono); font-size: 14.5px; }
+  :global(body.dark) .index-tab.active { background: rgba(255, 46, 46, 0.04); }
+
+  @media (max-width: 900px) {
+    .index-row {
+      grid-template-columns: 1fr;
+    }
+    .index-tab {
+      border-right: none;
+      border-bottom: 0.5px solid var(--rule);
+      padding: 18px 4px;
+    }
+    .index-tab:last-child { border-bottom: none; }
+    .index-tab::before { top: 0; left: 0; width: 2px; height: 100%; transform: scaleY(0); transform-origin: top center; }
+    .index-tab.active::before { transform: scaleY(1); }
+    .file-body-grid {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+    .file-annotations { padding-left: 14px; }
+    .file-card { padding: 22px 20px 24px; }
+    .file-title { font-size: 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .file-card { animation: none; }
+    .tab-number, .tab-hint-arrow, .index-tab::before { transition: none; }
+  }
+</style>
+
+<script>
+  const root = document.getElementById('fileIndex');
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.index-tab'));
+    const cards = Array.from(root.querySelectorAll<HTMLElement>('.file-card'));
+
+    function select(key: string) {
+      tabs.forEach(t => {
+        const on = t.dataset.key === key;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      cards.forEach(c => {
+        const on = c.dataset.key === key;
+        c.classList.toggle('active', on);
+        c.setAttribute('aria-hidden', on ? 'false' : 'true');
+        if (on) {
+          c.removeAttribute('hidden');
+          // restart animation
+          c.style.animation = 'none';
+          void c.offsetWidth;
+          c.style.animation = '';
+        } else {
+          c.setAttribute('hidden', '');
+        }
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const key = tab.dataset.key;
+        if (key) select(key);
+      });
+    });
+  }
+</script>

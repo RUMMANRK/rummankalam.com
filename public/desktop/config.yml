@@ -1,0 +1,297 @@
+backend:
+  name: github
+  repo: RUMMANRK/rummankalam.com
+  branch: main
+  base_url: https://sveltia-cms-auth.rumman.workers.dev
+
+media_folder: public/assets/uploads
+public_folder: /assets/uploads
+
+collections:
+
+  # ── Publications ────────────────────────────────────────
+  - name: publications
+    label: Publications
+    folder: src/content/publications
+    create: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - label: Outlet
+        name: outlet
+        widget: select
+        options: [UNB, The Daily Star, Substack, Other]
+      - label: Type
+        name: type
+        widget: select
+        options: [Analysis, Satire, Fiction, Poetry, Reportage, Essay]
+      - { label: Date, name: date, widget: datetime }
+      - { label: Excerpt, name: excerpt, widget: text }
+      - { label: Source URL, name: sourceUrl, widget: string }
+      - { label: Featured, name: featured, widget: boolean, default: false }
+
+  # ── Portfolio ────────────────────────────────────────────
+  - name: portfolio
+    label: Portfolio
+    folder: src/content/portfolio
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Role, name: role, widget: string }
+      - label: Project type
+        name: projectType
+        widget: select
+        options: [Product, Publication, Strategy]
+      - { label: Year, name: year, widget: number }
+      - { label: Hero image, name: heroImage, widget: image, required: false }
+      - { label: Problem, name: problem, widget: text }
+      - { label: What I did, name: whatIDid, widget: text }
+      - { label: Outcome, name: outcome, widget: text, required: false }
+      - { label: Live URL, name: liveUrl, widget: string, required: false }
+      - { label: Client reference, name: clientText, widget: string, required: false }
+      - { label: Sort order, name: order, widget: number, default: 999 }
+      - label: Show on site
+        name: visible
+        widget: boolean
+        default: true
+        required: false
+        hint: "Uncheck to hide this entry from the portfolio page."
+      - { label: Body, name: body, widget: markdown }
+
+  # ── Blog ─────────────────────────────────────────────────
+  - name: posts
+    label: Blog
+    folder: src/content/posts
+    create: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime }
+      - { label: Excerpt, name: excerpt, widget: text }
+      - { label: Draft, name: draft, widget: boolean, default: false }
+      - { label: Body, name: body, widget: markdown }
+
+  # ── Navigation (header + footer) ─────────────────────────
+  - name: navigation
+    label: Navigation (header + footer)
+    files:
+      - name: navigation
+        label: Nav & footer links
+        file: src/content/data/navigation.json
+        fields:
+          - name: nav
+            label: Header nav
+            widget: list
+            fields:
+              - { label: Href, name: href, widget: string }
+              - { label: Label, name: label, widget: string }
+              - label: Show in header
+                name: visible
+                widget: boolean
+                default: true
+                required: false
+          - name: footer
+            label: Footer links
+            widget: list
+            fields:
+              - { label: Href, name: href, widget: string }
+              - { label: Label, name: label, widget: string }
+              - label: External link
+                name: external
+                widget: boolean
+                default: false
+                required: false
+                hint: "Opens in a new tab with rel=noopener."
+              - label: Show in footer
+                name: visible
+                widget: boolean
+                default: true
+                required: false
+
+  # ── Link in bio (/links page) ────────────────────────────
+  - name: links
+    label: Link in bio (/links)
+    files:
+      - name: links
+        label: Links page
+        file: src/content/data/links.json
+        fields:
+          - { label: Display name, name: displayName, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: Location, name: location, widget: string, required: false }
+          - label: Avatar image
+            name: avatar
+            widget: image
+            required: false
+            hint: "Optional portrait image. Leave empty to hide."
+          - name: links
+            label: Links
+            widget: list
+            fields:
+              - { label: Label, name: label, widget: string }
+              - { label: URL, name: href, widget: string, hint: "Include https:// or mailto:" }
+              - { label: Description, name: description, widget: string, required: false }
+              - label: Visible
+                name: visible
+                widget: boolean
+                default: true
+                required: false
+                hint: "Uncheck to hide this link without deleting it."
+
+  # ── Career timeline ──────────────────────────────────────
+  - name: timeline
+    label: Career timeline
+    files:
+      - name: timeline
+        label: Timeline nodes
+        file: src/content/data/timeline.json
+        fields:
+          - name: nodes
+            label: Nodes
+            widget: list
+            fields:
+              - { label: Year, name: year, widget: number }
+              - { label: Label, name: label, widget: string }
+              - label: Current role
+                name: current
+                widget: boolean
+                default: false
+                hint: "Mark only one node as current — it renders in red."
+
+  # ── Logo strip ───────────────────────────────────────────
+  - name: logos
+    label: Logo strip (Where I've been)
+    files:
+      - name: logos
+        label: Employer tiles
+        file: src/content/data/logos.json
+        fields:
+          - name: tiles
+            label: Tiles
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Sort order, name: order, widget: number }
+              - label: Typography style
+                name: style
+                widget: select
+                options:
+                  - { label: "Sans bold", value: sans-bold }
+                  - { label: "Serif medium", value: serif-medium }
+                  - { label: "Sans spaced caps", value: sans-spaced }
+                  - { label: "Sans heavy spaced", value: sans-heavy-spaced }
+                  - { label: "Serif italic", value: serif-italic }
+                  - { label: "Serif bold small", value: serif-bold-sm }
+                  - { label: "Sans light small", value: sans-light-sm }
+
+  # ── Achievements ─────────────────────────────────────────
+  - name: achievements
+    label: Achievements list
+    files:
+      - name: achievements
+        label: Bullet points
+        file: src/content/data/achievements.json
+        fields:
+          - name: items
+            label: Items
+            widget: list
+            field: { label: Line, name: item, widget: string }
+
+  # ── Typewriter lines ─────────────────────────────────────
+  - name: typewriter
+    label: Hero typewriter lines
+    files:
+      - name: typewriter
+        label: Rotating lines
+        file: src/content/data/typewriter.json
+        fields:
+          - name: lines
+            label: Lines
+            widget: list
+            field:
+              label: Line
+              name: line
+              widget: string
+              hint: "End with a period. Keep under ~45 chars for clean wrapping."
+
+  # ── About page ───────────────────────────────────────────
+  - name: about
+    label: About page
+    files:
+      - name: about
+        label: Three-box content
+        file: src/content/data/about.json
+        fields:
+          - name: writer
+            label: Writer
+            widget: object
+            fields:
+              - { label: Summary (2 lines), name: summary, widget: string }
+              - { label: Body (80-150 words), name: body, widget: text }
+          - name: editor
+            label: Editor
+            widget: object
+            fields:
+              - { label: Summary (2 lines), name: summary, widget: string }
+              - { label: Body (80-150 words), name: body, widget: text }
+          - name: creative_director
+            label: Creative Director
+            widget: object
+            fields:
+              - { label: Summary (2 lines), name: summary, widget: string }
+              - { label: Body (80-150 words), name: body, widget: text }
+
+  # ── Consulting page ──────────────────────────────────────
+  - name: consulting
+    label: Consulting page
+    files:
+      - name: consulting
+        label: Consulting content
+        file: src/content/data/consulting.json
+        fields:
+          - { label: Tagline, name: tagline, widget: string }
+          - name: serviceAreas
+            label: Service areas
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: description, widget: text }
+          - name: engagements
+            label: Past engagements
+            widget: list
+            fields:
+              - { label: Description, name: description, widget: text }
+          - name: testimonials
+            label: Testimonials
+            widget: list
+            fields:
+              - { label: Quote, name: quote, widget: text }
+              - { label: Attribution, name: attribution, widget: string }
+
+  # ── Reading ──────────────────────────────────────────────
+  - name: reading
+    label: Reading list
+    files:
+      - name: current
+        label: Currently reading
+        file: src/content/data/reading-current.json
+        fields:
+          - name: books
+            label: Books
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Author, name: author, widget: string }
+              - { label: Cover image, name: cover, widget: image, required: false }
+      - name: alltime
+        label: All-time (25)
+        file: src/content/data/reading-alltime.json
+        fields:
+          - name: books
+            label: Books
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Author, name: author, widget: string }
+              - { label: Cover image, name: cover, widget: image, required: false }

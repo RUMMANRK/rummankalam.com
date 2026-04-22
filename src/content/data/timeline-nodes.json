@@ -1,0 +1,55 @@
+{
+  "default": {
+    "lead": "I've been running media operations since I was a <em>teenager</em>.",
+    "body": "Editor, creative director, consultant — three shapes of the same practice. I've built meme communities, youth supplements, satirical weeklies, and digital subscription products. I write. I ship. I hire. I read.",
+    "items": [
+      "Edited and authored Disconnect - A Collection of Short Stories",
+      "Maintained Rantages, a user-generated content ecosystem, for 17 years",
+      "Edited SHOUT at twenty-four — a first for the industry",
+      "Youngest Head of Digital at UNB",
+      "Built Rantages into a self-sustaining operation with zero investment",
+      "Introduced lean workflows into UNB's multimedia production"
+    ]
+  },
+  "Rantages": {
+    "lead": "I started Rantages at fourteen. And it's still running.",
+    "body": "What began as a Facebook page became Bangladesh's first online meme community — 310,000 followers, a creator network, and a proprietary CMS I built from scratch. Zero investment. Seventeen years and counting.",
+    "items": [
+      "Founded Bangladesh's first large-scale user-generated content community",
+      "Built a proprietary CMS from scratch with no prior technical training",
+      "Scaled to 310,000+ followers with no external funding",
+      "Turned Rantages into a self-sustaining operation through multiple platform shifts"
+    ]
+  },
+  "SHOUT": {
+    "lead": "Youngest editor of SHOUT — The Daily Star's youth supplement.",
+    "body": "I spent six years on SHOUT's editorial board before taking the lead at twenty-four years of age. The work was about rebuilding the content mix, recruiting a new generation of writers, and establishing a pipeline of young talent into serious newsroom careers.",
+    "items": [
+      "Youngest supplement editor in The Daily Star's history",
+      "Designed the editorial approach for a younger, more critical readership",
+      "Recruited and developed writers making their first attempts at journalism",
+      "Established a talent pipeline into the broader Daily Star group"
+    ]
+  },
+  "The Daily Star": {
+    "lead": "Head of New Media at The Daily Star. Newsroom-wide digital transformation.",
+    "body": "Joined the main newsroom to lead digital distribution strategy — integrating SEO, multimedia production, and social media into the editorial workflow. Built internal automation tools and then moved into product management for the paper's full digital transformation programme.",
+    "items": [
+      "Led digital distribution across one of South Asia's largest English-language newsrooms",
+      "Integrated SEO and multimedia production into daily editorial operations",
+      "Built workflow automation tools deployed across the newsroom",
+      "Managed the product roadmap for The Daily Star's digital transformation"
+    ]
+  },
+  "UNB": {
+    "lead": "Youngest Head of Digital in a newsroom of record.",
+    "body": "Joined UNB to lead its entire digital operation — strategy, content planning, multimedia production, and team development. The work was as much infrastructure as editorial: building systems that turned reactive day-to-day decisions into structured, measurable forward planning.",
+    "items": [
+      "Youngest Head of Digital in a newsroom of record",
+      "Designed and implemented UNB's editorial planning infrastructure",
+      "Introduced lean workflows into multimedia production",
+      "Restructured the digital desk around measurable content strategy",
+      "Introduced Content KPIs that measured success"
+    ]
+  }
+}

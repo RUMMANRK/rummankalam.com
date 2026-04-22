@@ -1,0 +1,196 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('portfolio', ({ data }) => data.visible !== false);
+  return entries.map(entry => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { name, role, projectType, year, problem, whatIDid, outcome, liveUrl, clientText, heroImage } = entry.data;
+
+const allEntries = await getCollection('portfolio', ({ data }) => data.visible !== false);
+allEntries.sort((a, b) => a.data.order - b.data.order);
+const idx = allEntries.findIndex(e => e.slug === entry.slug);
+const prev = idx > 0 ? allEntries[idx - 1] : null;
+const next = idx < allEntries.length - 1 ? allEntries[idx + 1] : null;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name,
+  creator: { '@type': 'Person', name: 'Rumman Kalam' },
+  description: problem,
+};
+---
+
+<BaseLayout title={name} description={problem} jsonLd={jsonLd}>
+  <article class="case-wrap container">
+
+    <header class="case-header section">
+      <div class="case-meta text-label">
+        <span class="case-type-tag">{projectType}</span>
+        <span>{year}</span>
+      </div>
+      <h1 class="case-title text-heading">{name}</h1>
+      <p class="case-role">{role}</p>
+      {heroImage && (
+        <figure class="case-hero">
+          <img src={heroImage} alt={name} loading="eager" decoding="async" />
+        </figure>
+      )}
+    </header>
+
+    <div class="case-sections">
+      <div class="case-block section">
+        <h2 class="block-label text-label">The problem</h2>
+        <p class="block-text text-body">{problem}</p>
+      </div>
+
+      <div class="case-block section">
+        <h2 class="block-label text-label">What I did</h2>
+        <p class="block-text text-body">{whatIDid}</p>
+      </div>
+
+      {outcome && (
+        <div class="case-block section">
+          <h2 class="block-label text-label">Outcome</h2>
+          <p class="block-text text-body">{outcome}</p>
+        </div>
+      )}
+
+      <div class="case-body section prose">
+        <Content />
+      </div>
+
+      {clientText && (
+        <div class="case-block section">
+          <h2 class="block-label text-label">Client reference</h2>
+          <p class="block-text text-body">{clientText}</p>
+        </div>
+      )}
+
+      {liveUrl && (
+        <div class="case-block section">
+          <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="live-link">
+            View live →
+          </a>
+        </div>
+      )}
+    </div>
+
+    <!-- Prev/next nav -->
+    <nav class="case-nav section" aria-label="Portfolio navigation">
+      <div class="case-nav-inner">
+        {prev && (
+          <a href={`/portfolio/${prev.slug}`} class="nav-prev">
+            <span class="text-label">← Previous</span>
+            <span class="nav-name">{prev.data.name}</span>
+          </a>
+        )}
+        {next && (
+          <a href={`/portfolio/${next.slug}`} class="nav-next">
+            <span class="text-label">Next →</span>
+            <span class="nav-name">{next.data.name}</span>
+          </a>
+        )}
+      </div>
+    </nav>
+
+  </article>
+</BaseLayout>
+
+<style>
+  .case-wrap { padding-bottom: var(--space-16); }
+  .section { padding: 40px 0; border-top: 0.5px solid var(--rule); }
+  .case-header { padding-top: 64px; border-top: none; }
+
+  .case-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .case-type-tag { color: var(--red); }
+
+  .case-title { margin-bottom: var(--space-3); }
+
+  .case-role {
+    font-size: 16px;
+    color: var(--muted);
+    transition: color 0.6s ease;
+  }
+
+  .case-hero {
+    margin: 36px 0 0;
+    border: 0.5px solid var(--rule);
+    background: var(--paper-warm);
+    padding: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 820px;
+    transition: border-color 0.6s ease;
+  }
+
+  .case-hero img {
+    max-width: 100%;
+    max-height: 320px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .case-sections { max-width: 680px; }
+
+  .block-label { margin-bottom: 12px; }
+
+  .block-text { max-width: 620px; }
+
+  .case-body { max-width: 65ch; }
+
+  .case-body :global(p) {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: var(--space-5);
+  }
+
+  .live-link {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--red);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .case-nav-inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .nav-prev, .nav-next {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: color 0.15s ease;
+  }
+
+  .nav-next { align-items: flex-end; margin-left: auto; }
+
+  .nav-name {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--ink);
+    transition: color 0.15s ease;
+  }
+
+  .nav-prev:hover .nav-name,
+  .nav-next:hover .nav-name { color: var(--red); }
+
+  :global(body.dark) .case-title,
+  :global(body.dark) .nav-name { font-family: var(--font-mono); }
+</style>

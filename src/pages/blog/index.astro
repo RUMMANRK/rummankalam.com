@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+---
+
+<BaseLayout
+  title="Blog"
+  description="Writing by Rumman Kalam — notes on media, technology, and the practice of editorial work."
+>
+  <div class="blog-wrap container">
+    <header class="blog-header section">
+      <div class="sec-kick"><div class="sec-kick-label">Blog</div></div>
+      <h1 class="blog-title text-heading">Notes on media and the rest.</h1>
+    </header>
+
+    <section class="section">
+      <ol class="post-list">
+        {posts.map(post => (
+          <li class="post-item">
+            <a href={`/blog/${post.slug}`} class="post-link">
+              <div class="post-date text-label">
+                <time datetime={post.data.date.toISOString().split('T')[0]}>
+                  {fmtDate(post.data.date)}
+                </time>
+              </div>
+              <h2 class="post-title">{post.data.title}</h2>
+              <p class="post-excerpt text-body">{post.data.excerpt}</p>
+              <span class="post-read">Read →</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-wrap { padding-bottom: var(--space-16); }
+  .section { padding: 48px 0; border-top: 0.5px solid var(--rule); }
+  .blog-header { padding-top: 64px; border-top: none; }
+  .blog-title { margin-bottom: 0; }
+
+  .post-list { display: flex; flex-direction: column; }
+
+  .post-item {
+    border-bottom: 0.5px solid var(--rule-fine);
+    transition: border-color 0.6s ease;
+  }
+
+  .post-link {
+    display: block;
+    padding: 28px 0;
+    transition: color 0.15s ease;
+  }
+
+  .post-link:hover .post-title { color: var(--red); }
+
+  .post-date { margin-bottom: 8px; }
+
+  .post-title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 10px;
+    letter-spacing: -0.015em;
+    max-width: 640px;
+    transition: color 0.2s ease;
+  }
+
+  .post-excerpt {
+    max-width: 620px;
+    margin-bottom: 12px;
+  }
+
+  .post-read {
+    font-size: 13px;
+    color: var(--red);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  :global(body.dark) .post-title { font-family: var(--font-mono); font-size: 18px; }
+
+  @media (max-width: 900px) {
+    .blog-header { padding-top: 48px; }
+  }
+</style>

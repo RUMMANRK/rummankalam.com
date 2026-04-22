@@ -1,0 +1,73 @@
+/* ── Layer 1-5 imports ───────────────────────────────────── */
+@import './tokens.css';
+@import './reset.css';
+@import './layout.css';
+@import './typography.css';
+@import './utilities.css';
+
+/* ── Fonts ───────────────────────────────────────────────── */
+@import '@fontsource/fraunces/300.css';
+@import '@fontsource/fraunces/400.css';
+@import '@fontsource/fraunces/500.css';
+@import '@fontsource/fraunces/400-italic.css';
+@import '@fontsource/fraunces/500-italic.css';
+@import '@fontsource/source-sans-3/400.css';
+@import '@fontsource/source-sans-3/500.css';
+@import '@fontsource/source-sans-3/600.css';
+@import '@fontsource/source-sans-3/400-italic.css';
+@import '@fontsource-variable/jetbrains-mono/index.css';
+
+/* ── Base body ───────────────────────────────────────────── */
+body {
+  font-family: var(--font-sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.5;
+  overflow-x: hidden;
+  transition: var(--t-color);
+}
+
+body.dark {
+  font-family: var(--font-mono);
+}
+
+/* ── Focus ring ──────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ── Shared keyframes ────────────────────────────────────── */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(6px); }
+}
+
+/* ── Dark mode scanlines ─────────────────────────────────── */
+body.dark::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(255, 46, 46, 0.03) 2px,
+    rgba(255, 46, 46, 0.03) 3px
+  );
+  pointer-events: none;
+  z-index: 99;
+  animation: scan 8s linear infinite;
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  body.dark::after { animation: none; }
+  html { scroll-behavior: auto; }
+}

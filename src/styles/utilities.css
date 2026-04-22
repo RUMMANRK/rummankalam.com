@@ -1,0 +1,40 @@
+/* ── Visibility ──────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* ── Colour modifiers ────────────────────────────────────── */
+.u-red { color: var(--red); }
+.u-muted { color: var(--muted); }
+.u-ink-soft { color: var(--ink-soft); }
+
+/* ── Text alignment ──────────────────────────────────────── */
+.u-center { text-align: center; }
+
+/* ── Margin helpers (override stack-gap per use) ─────────── */
+.u-mt-0 { margin-top: 0; }
+.u-mt-4 { margin-top: var(--space-4); }
+.u-mb-0 { margin-bottom: 0; }
+
+/* ── Max-width helpers ───────────────────────────────────── */
+.u-max-prose { max-width: 65ch; }
+.u-max-620 { max-width: 620px; }
+.u-max-680 { max-width: 680px; }
+
+/* ── Italic red (used in lead-line emphasis) ─────────────── */
+.u-em-red {
+  font-style: italic;
+  color: var(--red);
+}
+body.dark .u-em-red { font-style: normal; }
+
+/* ── Red dot/separator ───────────────────────────────────── */
+.u-dot {
+  color: var(--red);
+  margin-inline: var(--space-2);
+}

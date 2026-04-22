@@ -1,0 +1,6 @@
+[
+  { "year": 2009, "label": "Rantages", "current": false },
+  { "year": 2018, "label": "SHOUT", "current": false },
+  { "year": 2020, "label": "The Daily Star", "current": false },
+  { "year": 2024, "label": "UNB", "current": true }
+]

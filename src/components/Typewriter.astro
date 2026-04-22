@@ -1,0 +1,98 @@
+---
+import twLines from '../content/data/typewriter.json';
+---
+
+<h1 class="typewriter text-display" id="typewriter" aria-live="polite">
+  <div class="tw-inner">
+    <span id="twText"></span><span class="cursor" aria-hidden="true">▍</span>
+  </div>
+</h1>
+
+<style>
+  .typewriter {
+    /* Fixed 3-line height: 3 × line-height × 1em */
+    height: calc(3 * 1.05em);
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    margin: 0 0 36px;
+    width: 14ch;
+    max-width: 100%;
+  }
+
+  .tw-inner {
+    display: block;
+  }
+
+  .cursor {
+    display: inline;
+    color: var(--red);
+    font-weight: 400;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+  }
+
+  /* Dark mode: JetBrains Mono — wider glyphs, need more ch for wrapping */
+  :global(body.dark) .typewriter {
+    height: calc(3 * 1.15em);
+    width: 22ch;
+    max-width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .typewriter {
+      max-width: 100%;
+      width: 100%;
+      margin: 0 auto 28px;
+      text-align: center;
+      justify-content: center;
+      /* Mobile line-height matches text-display but at clamp(28px,8vw,44px) */
+      height: calc(3 * 1.05em);
+    }
+
+    :global(body.dark) .typewriter {
+      height: calc(3 * 1.15em);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+</style>
+
+<script define:vars={{ lines: twLines }}>
+  const el = document.getElementById('twText');
+  if (!el) throw new Error('twText not found');
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReduced) {
+    el.textContent = lines[0];
+  } else {
+    let idx = 0, pos = 0, phase = 'typing';
+
+    function tick() {
+      const cur = lines[idx];
+      if (phase === 'typing') {
+        pos++;
+        el.textContent = cur.slice(0, pos);
+        if (pos >= cur.length) { phase = 'pause'; setTimeout(tick, 2800); return; }
+        setTimeout(tick, 42 + Math.random() * 40);
+      } else if (phase === 'pause') {
+        phase = 'deleting';
+        setTimeout(tick, 80);
+      } else {
+        pos--;
+        el.textContent = cur.slice(0, Math.max(0, pos));
+        if (pos <= 0) {
+          phase = 'typing';
+          idx = (idx + 1) % lines.length;
+          setTimeout(tick, 420);
+          return;
+        }
+        setTimeout(tick, 18);
+      }
+    }
+    tick();
+  }
+</script>

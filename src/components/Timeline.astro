@@ -1,0 +1,132 @@
+---
+import timelineData from '../content/data/timeline.json';
+
+interface Props {
+  vertical?: boolean;
+}
+
+const { vertical = true } = Astro.props;
+
+const nodes = timelineData;
+const currentCount = nodes.filter(n => n.current).length;
+if (currentCount > 1) console.warn('Timeline: more than one node marked current');
+
+const lastY = 30 + (nodes.length - 1) * 98;
+const svgHeight = lastY + 80;
+const lastX = 40 + (nodes.length - 1) * 128;
+const svgWidth = lastX + 80;
+---
+
+{vertical ? (
+  <svg
+    class="timeline-svg"
+    viewBox={`0 0 80 ${svgHeight}`}
+    width="80"
+    height={svgHeight}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-label="Career timeline"
+    overflow="visible"
+  >
+    <line x1="28" y1="20" x2="28" y2={lastY + 20} stroke="var(--red)" stroke-width="1.5"/>
+
+    {/* Paper masks — outside fading groups so the red line never shows through */}
+    {nodes.map((_, i) => {
+      const y = 30 + i * 98;
+      return <circle cx="28" cy={y} r="13" fill="var(--paper)"/>;
+    })}
+
+    {nodes.map((node, i) => {
+      const y = 30 + i * 98;
+      return (
+        <g
+          class={`tl-node${node.current ? ' tl-current' : ''}`}
+          data-node={node.label}
+          role="button"
+          tabindex="0"
+          aria-label={`${node.label}, ${node.year}`}
+        >
+          {/* hit area */}
+          <circle class="tl-hit"    cx="28" cy={y} r="18" fill="transparent" pointer-events="all"/>
+          <circle class="tl-ring"   cx="28" cy={y} r="15" fill="none" stroke="var(--red)" stroke-width="0.8" stroke-dasharray="2.5 2.5"/>
+          <circle class="tl-dot-lg" cx="28" cy={y} r="9"  fill="var(--red)"/>
+          <circle class="tl-dot-sm" cx="28" cy={y} r={i === 0 ? 6 : 5} fill="var(--ink)"/>
+          <text class="tl-label" x="46" y={y + 5}  font-family="Fraunces, Georgia, serif" font-size="14">{node.label}</text>
+          <text class="tl-year"  x="46" y={y - 10} font-family="Source Sans 3, sans-serif" font-size="10" letter-spacing="1.5">{node.year}</text>
+        </g>
+      );
+    })}
+  </svg>
+) : (
+  <svg
+    class="timeline-svg"
+    viewBox={`0 0 ${svgWidth} 90`}
+    width="100%"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-label="Career timeline"
+  >
+    <line x1="30" y1="45" x2={lastX + 20} y2="45" stroke="var(--red)" stroke-width="1.5"/>
+
+    {nodes.map((_, i) => {
+      const x = 40 + i * 128;
+      return <circle cx={x} cy="45" r="11" fill="var(--paper)"/>;
+    })}
+
+    {nodes.map((node, i) => {
+      const x = 40 + i * 128;
+      return (
+        <g
+          class={`tl-node${node.current ? ' tl-current' : ''}`}
+          data-node={node.label}
+          role="button"
+          tabindex="0"
+          aria-label={`${node.label}, ${node.year}`}
+        >
+          <circle class="tl-hit"    cx={x} cy="45" r="20" fill="transparent" pointer-events="all"/>
+          <circle class="tl-ring"   cx={x} cy="45" r="12" fill="none" stroke="var(--red)" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <circle class="tl-dot-lg" cx={x} cy="45" r="7" fill="var(--red)"/>
+          <circle class="tl-dot-sm" cx={x} cy="45" r={i === 0 ? 5 : 4} fill="var(--ink)"/>
+          <text class="tl-year"  x={x} y="26" text-anchor="middle" font-family="Source Sans 3,sans-serif" font-size="9" letter-spacing="1.5">{node.year}</text>
+          <text class="tl-label" x={x} y="68" text-anchor="middle" font-family="Fraunces,serif" font-size="13">{node.label}</text>
+        </g>
+      );
+    })}
+  </svg>
+)}
+
+<style is:global>
+  .tl-node { cursor: pointer; transition: opacity 0.25s ease; }
+
+  .tl-ring    { opacity: 0; transition: opacity 0.3s ease; }
+  .tl-dot-lg  { opacity: 0; transition: opacity 0.3s ease; }
+  .tl-dot-sm  { opacity: 1; transition: opacity 0.3s ease; }
+
+  .tl-label { fill: var(--ink);   font-weight: 400; transition: fill 0.3s ease; }
+  .tl-year  { fill: var(--muted); font-weight: 400; transition: fill 0.3s ease; }
+
+  /* First node: slightly bolder label (keeps prior emphasis on Rantages) */
+  .tl-node:first-of-type .tl-label { font-weight: 500; }
+
+  /* Active look — default to .tl-current, or any node with data-active="true" */
+  .tl-node.tl-current .tl-ring,
+  .tl-node[data-active="true"] .tl-ring    { opacity: 1; }
+  .tl-node.tl-current .tl-dot-lg,
+  .tl-node[data-active="true"] .tl-dot-lg  { opacity: 1; }
+  .tl-node.tl-current .tl-dot-sm,
+  .tl-node[data-active="true"] .tl-dot-sm  { opacity: 0; }
+  .tl-node.tl-current .tl-label,
+  .tl-node.tl-current .tl-year,
+  .tl-node[data-active="true"] .tl-label,
+  .tl-node[data-active="true"] .tl-year {
+    fill: var(--red);
+    font-weight: 500;
+  }
+
+  /* When another node is clicked, revert the default-active look on .tl-current */
+  .timeline-svg.has-active .tl-node[data-active="false"] .tl-ring,
+  .timeline-svg.has-active .tl-node[data-active="false"] .tl-dot-lg { opacity: 0; }
+  .timeline-svg.has-active .tl-node[data-active="false"] .tl-dot-sm { opacity: 1; }
+  .timeline-svg.has-active .tl-node[data-active="false"] .tl-label  { fill: var(--ink);   font-weight: 400; }
+  .timeline-svg.has-active .tl-node[data-active="false"] .tl-year   { fill: var(--muted); font-weight: 400; }
+  .timeline-svg.has-active .tl-node[data-active="false"]:first-of-type .tl-label { font-weight: 500; }
+  .timeline-svg.has-active .tl-node[data-active="false"] { opacity: 0.35; }
+</style>

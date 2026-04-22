@@ -1,0 +1,6 @@
+[
+  { "name": "Rantages", "style": "sans-bold", "order": 1 },
+  { "name": "The Daily Star", "style": "serif-medium", "order": 2 },
+  { "name": "SHOUT", "style": "sans-spaced", "order": 3 },
+  { "name": "UNB", "style": "sans-heavy-spaced", "order": 4 }
+]

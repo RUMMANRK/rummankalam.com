@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import consultingData from '../content/data/consulting.json';
+import RevealEmail from '../components/RevealEmail.astro';
+
+const { tagline, serviceAreas, engagements, testimonials } = consultingData;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Rumman Kalam — Consulting',
+  description: 'Digital media consulting and new media strategy across South Asia.',
+  url: 'https://rummankalam.com/consulting',
+  areaServed: ['Bangladesh', 'South Asia'],
+  founder: { '@type': 'Person', name: 'Rumman Kalam' },
+};
+---
+
+<BaseLayout
+  title="Consulting"
+  description="Digital transformation consultant Bangladesh. New media strategy, editorial operations, and audience growth for publishers across South Asia. Based in Dhaka."
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="consulting-hero section container">
+    <div class="sec-kick"><div class="sec-kick-label">Consulting</div></div>
+    <h1 class="hero-tagline text-heading">{tagline}</h1>
+    <p class="hero-location text-label">Based in Dhaka. Working across South Asia.</p>
+  </section>
+
+  <!-- Service areas -->
+  <section class="section container">
+    <div class="sec-kick"><div class="sec-kick-label">What I do</div></div>
+    <div class="services-grid">
+      {serviceAreas.map(area => (
+        <div class="service-card">
+          <h2 class="service-title">{area.title}</h2>
+          <p class="service-desc text-body">{area.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Past engagements -->
+  <section class="section container">
+    <div class="sec-kick"><div class="sec-kick-label">Past engagements</div></div>
+    <div class="engagements">
+      {engagements.map(e => (
+        <p class="engagement text-body">{e.description}</p>
+      ))}
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  {testimonials.length > 0 && (
+    <section class="section container">
+      <div class="sec-kick"><div class="sec-kick-label">On the work</div></div>
+      <div class="testimonials">
+        {testimonials.map(t => (
+          <blockquote class="testimonial">
+            <p class="testimonial-quote">"{t.quote}"</p>
+            <footer class="testimonial-attr text-label">{t.attribution}</footer>
+          </blockquote>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="section container cta-section">
+    <p class="cta-text text-heading">Start a conversation.</p>
+    <span class="cta-link"><RevealEmail /></span>
+  </section>
+</BaseLayout>
+
+<style>
+  .section { padding: 64px 0; }
+
+  .consulting-hero {
+    padding-top: 72px;
+    padding-bottom: 64px;
+  }
+
+  .hero-tagline {
+    max-width: 680px;
+    margin-bottom: var(--space-4);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 60px;
+    max-width: 840px;
+  }
+
+  .service-title {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: var(--space-3);
+    letter-spacing: -0.01em;
+    transition: color 0.6s ease;
+  }
+
+  .engagements {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 680px;
+  }
+
+  .engagement {
+    padding-left: 24px;
+    border-left: 2px solid var(--red);
+  }
+
+  .testimonials {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .testimonial {
+    max-width: 620px;
+  }
+
+  .testimonial-quote {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    line-height: 1.4;
+    color: var(--ink);
+    font-style: italic;
+    margin-bottom: var(--space-4);
+    transition: color 0.6s ease;
+  }
+
+  .testimonial-attr { color: var(--muted); }
+
+  .cta-text {
+    max-width: 480px;
+    margin-bottom: var(--space-6);
+  }
+
+  .cta-link {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    color: var(--red);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: opacity 0.15s ease;
+  }
+  .cta-link:hover { opacity: 0.75; }
+
+  :global(body.dark) .service-title,
+  :global(body.dark) .testimonial-quote { font-family: var(--font-mono); font-style: normal; }
+  :global(body.dark) .testimonial-quote { font-size: 18px; }
+  :global(body.dark) .cta-text { font-family: var(--font-mono); }
+
+  @media (max-width: 900px) {
+    .section { padding: 48px 0; }
+    .consulting-hero { padding-top: 48px; }
+    .services-grid { grid-template-columns: 1fr; gap: 28px; }
+    .hero-tagline { text-align: center; margin: 0 auto var(--space-4); }
+    .hero-location { text-align: center; }
+  }
+</style>

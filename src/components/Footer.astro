@@ -1,0 +1,99 @@
+---
+import navigation from '../content/data/navigation.json';
+
+const footerLinks = navigation.footer.filter(link => link.visible !== false);
+---
+
+<footer class="footer">
+  <div class="footer-inner container">
+    <div class="footer-left">
+      &copy; Rumman Kalam
+      <span class="sep">·</span>
+      <strong>Dhaka</strong>
+      <span class="sep">·</span>
+      MMXXVI
+    </div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      {footerLinks.map(link => (
+        link.external ? (
+          <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+        ) : (
+          <a href={link.href}>{link.label}</a>
+        )
+      ))}
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--paper-warm);
+    border-top: 2px solid var(--ink);
+    padding: 28px 0;
+    transition: background 0.6s ease, border-color 0.6s ease;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .footer-left {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.6s ease;
+  }
+
+  .footer-left strong {
+    font-weight: 500;
+    color: var(--ink);
+    transition: color 0.6s ease;
+  }
+
+  .sep {
+    color: var(--red);
+    margin: 0 8px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+
+  .footer-links a:hover {
+    color: var(--red);
+  }
+
+  :global(body.dark) .footer-left,
+  :global(body.dark) .footer-links a {
+    font-family: var(--font-mono);
+  }
+
+  @media (max-width: 900px) {
+    .footer { padding: 24px 0; }
+    .footer-inner {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .footer-links {
+      justify-content: center;
+      gap: 16px;
+    }
+  }
+</style>

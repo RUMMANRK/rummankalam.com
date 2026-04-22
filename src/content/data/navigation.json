@@ -1,0 +1,60 @@
+{
+  "nav": [
+    {
+      "href": "/",
+      "label": "Home",
+      "visible": true
+    },
+    {
+      "href": "/about",
+      "label": "About",
+      "visible": true
+    },
+    {
+      "href": "/consulting",
+      "label": "Consulting",
+      "visible": true
+    },
+    {
+      "href": "/publications",
+      "label": "Publications",
+      "visible": true
+    },
+    {
+      "href": "/portfolio",
+      "label": "Portfolio",
+      "visible": true
+    },
+    {
+      "href": "/blog",
+      "label": "Blog",
+      "visible": false
+    }
+  ],
+  "footer": [
+    {
+      "href": "https://www.linkedin.com/in/rummankalam",
+      "label": "LinkedIn",
+      "external": true,
+      "visible": true
+    },
+    {
+      "href": "https://www.goodreads.com/author/show/19989689.Rumman_R_Kalam",
+      "label": "Goodreads",
+      "external": true,
+      "visible": true
+    },
+    {
+      "href": "/reading",
+      "label": "Reading",
+      "external": false,
+      "visible": true
+    },
+    {
+      "href": "/contact",
+      "label": "Contact",
+      "external": false,
+      "visible": true
+    }
+  ]
+}

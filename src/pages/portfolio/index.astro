@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import CaseStudyCard from '../../components/CaseStudyCard.astro';
+
+const entries = await getCollection('portfolio', ({ data }) => data.visible !== false);
+entries.sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Portfolio"
+  description="Selected work by Rumman Kalam — media products, editorial launches, and strategy engagements."
+>
+  <div class="portfolio-wrap container">
+    <header class="portfolio-header section">
+      <div class="sec-kick"><div class="sec-kick-label">Portfolio</div></div>
+      <h1 class="portfolio-title text-heading">Selected work.</h1>
+      <p class="portfolio-intro text-body">Products, publications, and strategy. The work behind the titles.</p>
+    </header>
+
+    <section class="section">
+      <div class="portfolio-grid">
+        {entries.map(entry => (
+          <CaseStudyCard
+            name={entry.data.name}
+            role={entry.data.role}
+            projectType={entry.data.projectType}
+            year={entry.data.year}
+            slug={entry.slug}
+            heroImage={entry.data.heroImage}
+          />
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .portfolio-wrap { padding-bottom: var(--space-16); }
+  .section { padding: 48px 0; border-top: 0.5px solid var(--rule); }
+  .portfolio-header { padding-top: 64px; border-top: none; }
+  .portfolio-title { margin-bottom: var(--space-4); }
+  .portfolio-intro { max-width: 480px; }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px 36px;
+  }
+
+  @media (max-width: 900px) {
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-header { padding-top: 48px; }
+  }
+
+  @media (min-width: 600px) and (max-width: 900px) {
+    .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

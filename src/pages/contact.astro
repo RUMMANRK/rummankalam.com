@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RevealEmail from '../components/RevealEmail.astro';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch with Rumman Kalam — editor, media operator, and consultant based in Dhaka."
+>
+  <div class="contact-wrap container section">
+    <div class="sec-kick"><div class="sec-kick-label">Contact</div></div>
+    <h1 class="contact-title text-heading">Get in touch.</h1>
+    <p class="contact-intro text-body">
+      Based in Dhaka. Open to consulting engagements, editorial collaborations, and conversations about media.
+    </p>
+    <ul class="contact-list">
+      <li class="contact-link">
+        <span class="contact-label text-label">Email</span>
+        <span class="contact-value"><RevealEmail /></span>
+      </li>
+      <li>
+        <a href="https://www.linkedin.com/in/rummankalam" target="_blank" rel="noopener noreferrer" class="contact-link">
+          <span class="contact-label text-label">LinkedIn</span>
+          <span class="contact-value">rummankalam</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.goodreads.com/author/show/19989689.Rumman_R_Kalam" target="_blank" rel="noopener noreferrer" class="contact-link">
+          <span class="contact-label text-label">Goodreads</span>
+          <span class="contact-value">Rumman R. Kalam</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-wrap { padding: 72px 0 var(--space-16); }
+
+  .contact-title {
+    max-width: 480px;
+    margin-bottom: var(--space-4);
+  }
+
+  .contact-intro {
+    max-width: 480px;
+    margin-bottom: var(--space-10);
+  }
+
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    transition: color 0.15s ease;
+  }
+
+  .contact-link:hover .contact-value { color: var(--red); }
+
+  .contact-label {
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .contact-value {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    transition: color 0.15s ease;
+  }
+
+  :global(body.dark) .contact-value { font-family: var(--font-mono); font-size: 18px; }
+
+  @media (max-width: 900px) {
+    .contact-link { flex-direction: column; gap: 4px; }
+    .contact-value { font-size: 18px; }
+  }
+</style>

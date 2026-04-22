@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import PublicationCard from '../../components/PublicationCard.astro';
+
+const allPubs = await getCollection('publications');
+allPubs.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const outlets = [...new Set(allPubs.map(p => p.data.outlet))].sort();
+const types = [...new Set(allPubs.map(p => p.data.type))].sort();
+const years = [...new Set(allPubs.map(p => p.data.date.getFullYear()))].sort((a, b) => b - a);
+
+// Read active filters from URL
+const url = Astro.url;
+const activeOutlet = url.searchParams.get('outlet') ?? '';
+const activeType = url.searchParams.get('type') ?? '';
+const activeYear = url.searchParams.get('year') ?? '';
+
+// Serialize all pub data for client-side filtering
+const pubsJson = allPubs.map(p => ({
+  title: p.data.title,
+  outlet: p.data.outlet,
+  type: p.data.type,
+  date: p.data.date.toISOString(),
+  year: p.data.date.getFullYear(),
+  excerpt: p.data.excerpt,
+  sourceUrl: p.data.sourceUrl,
+}));
+---
+
+<BaseLayout
+  title="Publications"
+  description="Writing by Rumman Kalam — analysis, essays, satire, and reportage published across UNB, The Daily Star, Substack, and beyond."
+>
+  <div class="pubs-wrap container">
+    <header class="pubs-header section">
+      <div class="sec-kick"><div class="sec-kick-label">Publications</div></div>
+      <h1 class="pubs-title text-heading">Writing, across outlets and forms.</h1>
+    </header>
+
+    <section class="section">
+      <!-- Filter chips -->
+      <div class="filter-area" id="filterArea">
+        <div class="chip-group">
+          <span class="chip-group-label text-label">Outlet</span>
+          <div class="chip-row">
+            <button class="chip" data-group="outlet" data-value="">All</button>
+            {outlets.map(o => <button class="chip" data-group="outlet" data-value={o}>{o}</button>)}
+          </div>
+        </div>
+        <div class="chip-group">
+          <span class="chip-group-label text-label">Type</span>
+          <div class="chip-row">
+            <button class="chip" data-group="type" data-value="">All</button>
+            {types.map(t => <button class="chip" data-group="type" data-value={t}>{t}</button>)}
+          </div>
+        </div>
+        <div class="chip-group">
+          <span class="chip-group-label text-label">Year</span>
+          <div class="chip-row">
+            <button class="chip" data-group="year" data-value="">All</button>
+            {years.map(y => <button class="chip" data-group="year" data-value={String(y)}>{y}</button>)}
+          </div>
+        </div>
+      </div>
+
+      <!-- Results count -->
+      <p class="results-count text-label" id="resultsCount"></p>
+
+      <!-- Card grid -->
+      <div class="pubs-grid" id="pubsGrid">
+        {allPubs.map(p => (
+          <PublicationCard
+            title={p.data.title}
+            outlet={p.data.outlet}
+            type={p.data.type}
+            date={p.data.date}
+            excerpt={p.data.excerpt}
+            sourceUrl={p.data.sourceUrl}
+          />
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .pubs-wrap { padding-bottom: var(--space-16); }
+  .section { padding: 48px 0; border-top: 0.5px solid var(--rule); }
+  .pubs-header { padding-top: 64px; border-top: none; }
+  .pubs-title { max-width: 600px; margin-bottom: 0; }
+
+  .filter-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .chip-group { display: flex; flex-direction: column; gap: 8px; }
+  .chip-group-label { display: block; margin-bottom: 2px; }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .chip {
+    padding: 4px 12px;
+    border: 1px solid var(--rule);
+    background: none;
+    color: var(--ink);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .chip:hover,
+  .chip--active {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+
+  :global(body.dark) .chip--active { color: #000; }
+  :global(body.dark) .chip { font-family: var(--font-mono); }
+
+  .results-count {
+    margin-bottom: 28px;
+    color: var(--muted);
+  }
+
+  .pubs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px 36px;
+  }
+
+  @media (max-width: 900px) {
+    .pubs-grid { grid-template-columns: 1fr; }
+    .pubs-header { padding-top: 48px; }
+  }
+
+  @media (min-width: 600px) and (max-width: 900px) {
+    .pubs-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<script define:vars={{ pubsJson }}>
+  const grid = document.getElementById('pubsGrid');
+  const countEl = document.getElementById('resultsCount');
+  const filterArea = document.getElementById('filterArea');
+  if (!grid || !filterArea) throw new Error('pubs elements missing');
+
+  const pubs = pubsJson;
+  const active = { outlet: '', type: '', year: '' };
+
+  // Sync chips with URL params on load
+  const sp = new URLSearchParams(window.location.search);
+  ['outlet', 'type', 'year'].forEach(k => { active[k] = sp.get(k) ?? ''; });
+
+  function fmtDate(iso) {
+    return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  function render() {
+    const filtered = pubs.filter(p =>
+      (!active.outlet || p.outlet === active.outlet) &&
+      (!active.type || p.type === active.type) &&
+      (!active.year || String(p.year) === active.year)
+    );
+
+    grid.innerHTML = filtered.map(p => `
+      <article class="pub-card" style="padding-top:14px;border-top:1.5px solid var(--ink);">
+        <a href="${p.sourceUrl}" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;">
+          <div style="display:flex;justify-content:space-between;font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;color:var(--muted);">
+            <span style="color:var(--red);font-weight:500;">${p.outlet}</span>
+            <time>${fmtDate(p.date)}</time>
+          </div>
+          <h3 style="font-family:var(--font-serif);font-weight:500;font-size:18px;line-height:1.3;color:var(--ink);margin:0 0 8px;letter-spacing:-0.01em;">${p.title}</h3>
+          <p style="font-size:14px;line-height:1.6;color:var(--ink-soft);margin:0 0 10px;">${p.excerpt}</p>
+          <div style="font-size:11px;color:var(--muted);font-style:italic;font-family:var(--font-serif);">${p.type}</div>
+        </a>
+      </article>
+    `).join('');
+
+    if (countEl) countEl.textContent = `${filtered.length} piece${filtered.length !== 1 ? 's' : ''}`;
+
+    // Update URL
+    const params = new URLSearchParams();
+    Object.entries(active).forEach(([k, v]) => { if (v) params.set(k, v); });
+    const query = params.toString();
+    history.replaceState({}, '', query ? `?${query}` : window.location.pathname);
+
+    // Update chip active states
+    filterArea.querySelectorAll('.chip').forEach(btn => {
+      const group = btn.dataset.group;
+      const val = btn.dataset.value;
+      btn.classList.toggle('chip--active', active[group] === val);
+    });
+  }
+
+  filterArea.addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    active[btn.dataset.group] = btn.dataset.value;
+    render();
+  });
+
+  render();
+</script>
