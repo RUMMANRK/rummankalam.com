@@ -74,11 +74,10 @@ const jsonLd = {
 </BaseLayout>
 
 <style>
-  .section { padding: 64px 0; }
+  .section { padding-block: 64px; }
 
   .consulting-hero {
-    padding-top: 72px;
-    padding-bottom: 64px;
+    padding-block: 72px 64px;
   }
 
   .hero-tagline {
@@ -158,8 +157,8 @@ const jsonLd = {
   :global(body.dark) .cta-text { font-family: var(--font-mono); }
 
   @media (max-width: 900px) {
-    .section { padding: 48px 0; }
-    .consulting-hero { padding-top: 48px; }
+    .section { padding-block: 48px; }
+    .consulting-hero { padding-block: 48px 64px; }
     .services-grid { grid-template-columns: 1fr; gap: 28px; }
     .hero-tagline { text-align: center; margin: 0 auto var(--space-4); }
     .hero-location { text-align: center; }
